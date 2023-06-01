@@ -1,50 +1,24 @@
 require('dotenv').config();
 const { exec } = require('child_process');
-const fs = require('fs');
-const speech = require('@google-cloud/speech');
-const { Client } = require('ssh2');
-
 
 const vmUsername = process.env.VM_USERNAME;
 const vmPassword = process.env.VM_PASSWORD;
 const vmIP = process.env.VM_IP;
 const vmSSH = process.env.VM_SSH;
 
+// console.log('VM_USERNAME:', vmUsername);
+// console.log('VM_PASSWORD:', vmPassword);
+// console.log('VM_IP:', vmIP);
+// console.log('VM_SSH:', vmSSH);
+
+const fs = require('fs');
+const { Client } = require('ssh2');
+
 const remotePath = '/var/lib/asterisk/sounds/en/'; // Source path on your Linux VM
 const localPath = 'C:/MovedFiles'; // Destination path in your local machine
-const filename = 'exercise.mp3'; // Specify the filename you want to copy from the remotePath
 
-const client = new speech.SpeechClient();
-
-function transcribeAudio(filePath) {
-  const file = fs.readFileSync(filePath);
-  const audioBytes = file.toString('base64');
-
-  const audio = {
-    content: audioBytes,
-  };
-  const config = {
-    encoding: 'mp3',
-    sampleRateHertz: 48000,
-    languageCode: 'en-US',
-  };
-  const request = {
-    audio: audio,
-    config: config,
-  };
-
-  client
-    .recognize(request)
-    .then((response) => {
-      const transcription = response[0].results
-        .map((result) => result.alternatives[0].transcript)
-        .join('\n');
-      console.log(`Transcription: ${transcription}`);
-    })
-    .catch((err) => {
-      console.error('Transcription error:', err);
-    });
-}
+// Specify the filename you want to copy from the remotePath
+const filename = 'StarWars.wav';
 
 const conn = new Client();
 
@@ -67,10 +41,6 @@ conn.on('ready', () => {
       }
 
       console.log('File copied successfully!');
-
-      const filePath = destinationPath;
-      transcribeAudio(filePath);
-
       conn.end();
     });
   });
