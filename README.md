@@ -48,7 +48,12 @@ To transfer a file from the remote Linux VM to your local machine, follow these 
    ```shell
    node index.js
    ```
-   
+3. Make sure you have the `ssh2` package installed. If it is not already installed, you can install it by running the following command:
+
+```shell
+npm install ssh2
+```
+
    The script will connect to the Linux VM using SSH and initiate the file transfer process. The specified file will be copied from the `remotePath` to the `localPath`.
 
 Once the file transfer is complete, you will see a success message in the console.
